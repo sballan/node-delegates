@@ -1,19 +1,16 @@
 
 var assert = require('assert');
-var delegate = require('..');
+var delegate = require('../index')['delegate'];
 
 describe('.method(name)', function(){
-  it('should delegate methods', function(){
-    var obj = {};
-
+	it('should delegate methods', function(){
+		var obj = {};
     obj.request = {
       foo: function(bar){
         assert(this == obj.request);
         return bar;
       }
     };
-
-    delegate(obj, 'request').method('foo');
 
     obj.foo('something').should.equal('something');
   })
