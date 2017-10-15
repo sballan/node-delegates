@@ -2,10 +2,6 @@
  * Expose `Delegator`.
  */
 
-export function delegate(proto, target) {
-	return new Delegator(proto, target);
- }
-
 export class Delegator {
 	public methods = [];
 	public getters = [];
@@ -32,7 +28,7 @@ export class Delegator {
 	 * @api public
 	 */
 
-	auto(proto, targetProto, targetProp) {
+	static auto(proto, targetProto, targetProp) {
 		const delegator = new Delegator(proto, targetProp);
 		const properties = Object.getOwnPropertyNames(targetProto);
 		for (let i = 0; i < properties.length; i++) {
@@ -148,7 +144,7 @@ export class Delegator {
 				this[target][name] = val;
 				return this;
 			} else {
-				return this[target[name]]
+				return this[target][name];
 			}
 		};
 
@@ -158,3 +154,20 @@ export class Delegator {
 	
 
 }
+
+/**
+ * Expose `delegate`.
+ */
+
+interface DelegateInterface {
+	(proto: Object, target: string): Delegator;
+	auto: Function;
+}
+
+const delegate = <DelegateInterface>function(proto: Object, target: string) : Delegator {
+	return new Delegator(proto, target);
+}
+ 
+delegate.auto = Delegator.auto
+
+export { delegate }
